@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
   const {pathname} = url.parse(req.url, true)
+  // remove trailing and leading slashes
   const trimmedPath = pathname.replace(/^\/+|\/+$/g, '')
   res.end('Hello World!\n');
 
