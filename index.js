@@ -30,6 +30,7 @@ const server = http.createServer((req, res) => {
     requestHandler(dataToHandle, (err, statusCode = 200, payload = {}) => {
       console.log(`Request made with`, dataToHandle);
       if (err) res.end(err);
+      res.setHeader('Content-Type', 'application/json');
       res.writeHead(statusCode);
       res.end(JSON.stringify(payload));
       console.log(`Responding to request with status code ${statusCode} and ${JSON.stringify(payload)}`);
@@ -39,13 +40,13 @@ const server = http.createServer((req, res) => {
   const handlers = {
     sample: (dataToHandle, callback) => {
       const statusCode = 406;
-      const payload = "Sample route exists!";
+      const payload = { message: "Sample route exists!" };
       callback(null, statusCode, payload);
     },
     // let user know their route was not found
     notFound: (dataToHandle, callback) => {
       const statusCode = 404;
-      const payload = "That route does not exist!";
+      const payload = { message: "That route does not exist!" };
       callback(null, statusCode, payload);
     }
   };
