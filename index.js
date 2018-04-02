@@ -46,11 +46,7 @@ const unifiedServer = (req, res) => {
   })
 
   const handlers = {
-    sample: (dataToHandle, callback) => {
-      const statusCode = 406;
-      const payload = { message: "Sample route exists!" };
-      callback(null, statusCode, payload);
-    },
+    ping: (dataToHandle, callback) => callback(null, 200),
     // Let user know their specified route was not found.
     notFound: (dataToHandle, callback) => {
       const statusCode = 404;
@@ -60,7 +56,7 @@ const unifiedServer = (req, res) => {
   };
 
   const router = {
-    sample: handlers.sample,
+    ping: handlers.ping,
   };
 };
 
