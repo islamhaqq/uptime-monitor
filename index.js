@@ -1,14 +1,17 @@
 // Define entry point for API.
 
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
+const fs = require('fs');
 
 const config = require('./config');
 
-const { port, environmentName } = config;
+const { ports, environmentName } = config;
 
-const server = http.createServer((req, res) => {
+// Implement server logic.
+const unifiedServer = (req, res) => {
   const { pathname, query } = url.parse(req.url, true)
   const { method, headers } = req;
 
@@ -59,8 +62,25 @@ const server = http.createServer((req, res) => {
   const router = {
     sample: handlers.sample,
   };
-});
+};
 
-server.listen(port, () => {
-  console.log(`server listening on port ${port} in the ${environmentName} environment`);
+// Run both a HTTP and a HTTPS version of our API.
+const httpServer = http.createServer((res, req) => {
+  unifiedServer(res,req);
 })
+const httpsOptions = {
+  cert: fs.readFileSync('./https/cert.pem'),
+  pem: fs.readFileSync('./https/key.pem')
+};
+const httpsServer = https.createServer(httpsOptions, (res, req) => {
+  unifiedServer(res, req);
+});
+function logListenServer(port, environmentName) {
+  console.log(`Server listening on port ${port} in the ${environmentName} environment.`);
+}
+httpServer.listen(ports.http, () => {
+  logListenServer(ports.http, environmentName);
+});
+httpsServer.listen(ports.https, () => {
+  logListenServer(ports.https, environmentName);
+});
