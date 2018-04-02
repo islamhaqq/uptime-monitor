@@ -2,7 +2,9 @@ const http = require('http');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 
-const port = process.env.PORT || 3000;
+const config = require('./config');
+
+const { port, environmentName } = config;
 
 const server = http.createServer((req, res) => {
   const { pathname, query } = url.parse(req.url, true)
@@ -19,6 +21,7 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     payload += decoder.end();
 
+    // handle requests
     const dataToHandle = {
       trimmedPath,
       query,
@@ -57,5 +60,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`server listening on port ${port}`)
+  console.log(`server listening on port ${port} in the ${environmentName} environment`);
 })
