@@ -1,3 +1,5 @@
+// Define entry point for API.
+
 const http = require('http');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
@@ -10,7 +12,7 @@ const server = http.createServer((req, res) => {
   const { pathname, query } = url.parse(req.url, true)
   const { method, headers } = req;
 
-  // remove trailing and leading slashes
+  // Treat paths with leading or trailing slashes or none the same
   const trimmedPath = pathname.replace(/^\/+|\/+$/g, '');
 
   const decoder = new StringDecoder('utf-8');
@@ -21,7 +23,7 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     payload += decoder.end();
 
-    // handle requests
+    // Route requests to their respective handlers.
     const dataToHandle = {
       trimmedPath,
       query,
@@ -46,7 +48,7 @@ const server = http.createServer((req, res) => {
       const payload = { message: "Sample route exists!" };
       callback(null, statusCode, payload);
     },
-    // let user know their route was not found
+    // Let user know their specified route was not found.
     notFound: (dataToHandle, callback) => {
       const statusCode = 404;
       const payload = { message: "That route does not exist!" };

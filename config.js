@@ -1,11 +1,13 @@
+// Configure environment for API.
+
 const environment = {
   staging: {
     port: 3000,
-    environmentName: "staging"
+    environmentName: 'staging'
   },
   production: {
     port: 5000,
-    environmentName: "production"
+    environmentName: 'production'
   }
 };
 
