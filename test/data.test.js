@@ -1,21 +1,28 @@
-const { create, read, update } = require('../lib/data');
+const dataCRUDOps = require('../lib/data');
 
-// create('whut', 'ayy', {"ay": "yooooo! it's a permanent vacation!"}, err => {
-//   if (err) console.log(err);
-//   console.log('success!!')
-// });
+const { create, read, update } = dataCRUDOps;
 
-read('whut', 'ay', (err, fileData) => {
+create('whut', 'ay', {"ay": "yooooo! it's a permanent vacation!"}, err => {
   if (err) console.log(err);
-  console.log('success!!', JSON.parse(fileData));
-
-  update('whut', 'ay', {"bob": "the builder1"}, err => {
+  console.log('created!!')
+  
+  read('whut', 'ay', (err, fileData) => {
     if (err) console.log(err);
-    console.log('success!!');
+    console.log('read!!', JSON.parse(fileData));
 
-    read('whut', 'ay', (err, fileData) => {
+    update('whut', 'ay', {"bob": "the builder1"}, err => {
       if (err) console.log(err);
-      console.log('success!!', JSON.parse(fileData));
+      console.log('updated!!');
+
+      read('whut', 'ay', (err, fileData) => {
+        if (err) console.log(err);
+        console.log('read!!', JSON.parse(fileData));
+
+        dataCRUDOps.delete('whut', 'ay', err => {
+          if (err) console.log(err);
+          console.log('deleted!!!');
+        })
+      });
     });
   });
 });
