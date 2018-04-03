@@ -65,8 +65,8 @@ const httpServer = http.createServer((res, req) => {
   unifiedServer(res,req);
 })
 const httpsOptions = {
-  cert: fs.readFileSync('./https/cert.pem'),
-  pem: fs.readFileSync('./https/key.pem')
+  cert: fs.readSync('./https/cert.pem'),
+  pem: fs.readSync('./https/key.pem')
 };
 const httpsServer = https.createServer(httpsOptions, (res, req) => {
   unifiedServer(res, req);
