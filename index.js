@@ -31,7 +31,6 @@ const unifiedServer = (req, res) => {
     } catch (err) {
       return res.end(JSON.stringify({ error: err.toString() }));
     }
-    // Route requests to their respective handlers.
     const dataToHandle = {
       trimmedPath,
       query,
@@ -39,12 +38,15 @@ const unifiedServer = (req, res) => {
       headers,
       payload,
     };
+    // Route requests to their respective handlers.
     const requestHandler = router[trimmedPath] ? router[trimmedPath] : handlers.notFound;
     requestHandler(dataToHandle, (err, statusCode = 200, payload = {}) => {
       console.log(`Request made with`, dataToHandle);
+      // Send status code and any other additional headers.
       res.writeHead(statusCode, {
         'Content-Type': 'application/json'
       });
+      // Handle errors and successes.
       if (err) {
         console.log(`Responding to request with status code ${statusCode} and error message: ${JSON.stringify(err)}`);
         return res.end(JSON.stringify(err));
@@ -52,8 +54,9 @@ const unifiedServer = (req, res) => {
       res.end(JSON.stringify(payload));
       console.log(`Responding to request with status code ${statusCode} and ${JSON.stringify(payload)}`);
     });
-  })
+  });
 
+  // Map routes to handlers.
   const router = {
     ping: handlers.ping,
     user: handlers.user,
