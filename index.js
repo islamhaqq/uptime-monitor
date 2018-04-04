@@ -7,6 +7,7 @@ const { StringDecoder } = require('string_decoder');
 const fs = require('fs');
 
 const config = require('./config');
+const handlers = require('./lib/handlers');
 
 const { ports, environmentName } = config;
 
@@ -44,16 +45,6 @@ const unifiedServer = (req, res) => {
       console.log(`Responding to request with status code ${statusCode} and ${JSON.stringify(payload)}`);
     });
   })
-
-  const handlers = {
-    ping: (dataToHandle, callback) => callback(null, 200),
-    // Let user know their specified route was not found.
-    notFound: (dataToHandle, callback) => {
-      const statusCode = 404;
-      const payload = { message: "That route does not exist!" };
-      callback(null, statusCode, payload);
-    }
-  };
 
   const router = {
     ping: handlers.ping,
