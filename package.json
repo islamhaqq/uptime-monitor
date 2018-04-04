@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "node **/*.test.js",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.17.3"
+  }
 }
