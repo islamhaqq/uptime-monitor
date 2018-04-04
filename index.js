@@ -26,7 +26,11 @@ const unifiedServer = (req, res) => {
   });
   req.on('end', () => {
     payloadString += decoder.end();
-    const payload = JSON.parse(payloadString);
+    try {
+      const payload = JSON.parse(payloadString);
+    } catch (err) {
+      return res.end(JSON.stringify({ error: err.toString() }));
+    }
     // Route requests to their respective handlers.
     const dataToHandle = {
       trimmedPath,
