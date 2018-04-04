@@ -6,7 +6,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const fs = require('fs');
 
-const config = require('./config');
+const config = require('./lib/config');
 const handlers = require('./lib/handlers');
 
 const { ports, environmentName } = config;
