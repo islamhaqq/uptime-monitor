@@ -6,14 +6,16 @@ const environment = {
       http: 3000,
       https: 3001
     },
-    environmentName: 'staging'
+    environmentName: 'staging',
+    secret: 'secretForStaging'
   },
   production: {
     ports: {
       http: 5000,
       https: 5001
     },
-    environmentName: 'production'
+    environmentName: 'production',
+    secret: 'secretForProduction'
   }
 };
 

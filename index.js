@@ -20,13 +20,13 @@ const unifiedServer = (req, res) => {
   const trimmedPath = pathname.replace(/^\/+|\/+$/g, '');
 
   const decoder = new StringDecoder('utf-8');
-  let payload = '';
+  let payloadString = '';
   req.on('data', data => {
-    payload += decoder.write(data);
+    payloadString += decoder.write(data);
   });
   req.on('end', () => {
-    payload += decoder.end();
-
+    payloadString += decoder.end();
+    const payload = JSON.parse(payloadString);
     // Route requests to their respective handlers.
     const dataToHandle = {
       trimmedPath,
@@ -38,9 +38,13 @@ const unifiedServer = (req, res) => {
     const requestHandler = router[trimmedPath] ? router[trimmedPath] : handlers.notFound;
     requestHandler(dataToHandle, (err, statusCode = 200, payload = {}) => {
       console.log(`Request made with`, dataToHandle);
-      if (err) res.end(err);
-      res.setHeader('Content-Type', 'application/json');
-      res.writeHead(statusCode);
+      res.writeHead(statusCode, {
+        'Content-Type': 'application/json'
+      });
+      if (err) {
+        console.log(`Responding to request with status code ${statusCode} and error message: ${JSON.stringify(err)}`);
+        return res.end(JSON.stringify(err));
+      }
       res.end(JSON.stringify(payload));
       console.log(`Responding to request with status code ${statusCode} and ${JSON.stringify(payload)}`);
     });
@@ -48,6 +52,7 @@ const unifiedServer = (req, res) => {
 
   const router = {
     ping: handlers.ping,
+    user: handlers.user,
   };
 };
 
