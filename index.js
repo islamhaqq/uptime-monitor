@@ -50,8 +50,9 @@ const unifiedServer = (req, res) => {
       });
       // Handle errors and successes.
       if (err) {
-        console.log(`Responding to request with status code ${statusCode} and error message: ${JSON.stringify(err)}`);
-        return res.end(JSON.stringify({ error: err.message }));
+        const errorMessage = JSON.stringify({ error: err.message });
+        console.log(`Responding to request with status code ${statusCode} and error message: ${errorMessage}`);
+        return res.end(errorMessage);
       }
       res.end(JSON.stringify(payload));
     });
