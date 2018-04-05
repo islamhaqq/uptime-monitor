@@ -13,12 +13,14 @@ const { ports, environmentName } = config;
 
 // Implement server logic.
 const unifiedServer = (req, res) => {
+  // Store valuable information provided by the request URL.
   const { pathname, query } = url.parse(req.url, true)
   const { method, headers } = req;
 
-  // Treat paths with leading or trailing slashes or none the same
+  // Treat paths with leading or trailing slashes or none the same.
   const trimmedPath = pathname.replace(/^\/+|\/+$/g, '');
 
+  // Decode buffer into a UTF-8 character encoded string.
   const decoder = new StringDecoder('utf-8');
   let payloadString = '';
   req.on('data', data => {
@@ -27,7 +29,8 @@ const unifiedServer = (req, res) => {
   req.on('end', () => {
     payloadString += decoder.end();
     try {
-      var payload = JSON.parse(payloadString);
+      // Make sure there's a payload before converting it into an Object.
+      var payload = payloadString ? JSON.parse(payloadString) : '';
     } catch (err) {
       return res.end(JSON.stringify({ error: err.toString() }));
     }
@@ -38,10 +41,9 @@ const unifiedServer = (req, res) => {
       headers,
       payload,
     };
-    // Route requests to their respective handlers.
+    // Call handlers to handle request via router.
     const requestHandler = router[trimmedPath] ? router[trimmedPath] : handlers.notFound;
     requestHandler(dataToHandle, (err, statusCode = 200, payload = {}) => {
-      console.log(`Request made with`, dataToHandle);
       // Send status code and any other additional headers.
       res.writeHead(statusCode, {
         'Content-Type': 'application/json'
@@ -52,7 +54,6 @@ const unifiedServer = (req, res) => {
         return res.end(JSON.stringify({ error: err.message }));
       }
       res.end(JSON.stringify(payload));
-      console.log(`Responding to request with status code ${statusCode} and ${JSON.stringify(payload)}`);
     });
   });
 
