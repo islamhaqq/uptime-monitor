@@ -61,4 +61,5 @@ typings/
 .next
 
 # db
-.data
+.data/tokens/**
+.data/users/**
